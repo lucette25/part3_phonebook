@@ -2,7 +2,7 @@ import axios from 'axios'
 
 
 
-const baseUrl = 'https://peaceful-everglades-70618.herokuapp.com/api/persons'
+const baseUrl = '/api/perons'
 
 const getAll = () => {
     const request = axios.get(baseUrl)

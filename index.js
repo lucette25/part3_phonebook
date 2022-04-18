@@ -1,6 +1,9 @@
+require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
-const mongoose = require('mongoose')
+//const mongoose = require('mongoose')
+const Person = require('./models/person')
+
 
 const app = express()
 const cors = require('cors')
@@ -18,33 +21,6 @@ app.use(
     ':method :url :status :res[content-length] - :response-time ms :postData'
   )
 );
-
-const password="Momo"
-
-//Mongo
-const url =`mongodb+srv://Momo:${password}@cluster0.iewk6.mongodb.net/phonebookApp?retryWrites=true&w=majority`
-mongoose.connect(url)
-
-const personSchema = new mongoose.Schema({
-    name: String, 
-    number: String,
-})
-
-const Person = mongoose.model('Person', personSchema)
-
-personSchema.set('toJSON', {
-  transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString()
-
-    //In order to use string methodes to filter
-    returnedObject.name = `${returnedObject.name}`
-    returnedObject.number = `${returnedObject.number}`
-
-    delete returnedObject._id
-    delete returnedObject.__v
-  }
-})
-
 
 
 
@@ -110,12 +86,7 @@ app.get('/api/persons', (request, response) => {
   const generateId = () =>  Math.floor(Math.random() * (1000- 10) + 10)
 
 
-  
-
-
-
-  
-app.post('/api/persons', (request, response) => {
+  app.post('/api/persons', (request, response) => {
     const body = request.body
     const existName = (element) => element.name===body.name;
     const existNumber = (element) => element.number===body.number;

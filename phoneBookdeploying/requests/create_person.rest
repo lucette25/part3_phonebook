@@ -1,0 +1,7 @@
+POST https://peaceful-everglades-70618.herokuapp.com/api/persons
+Content-Type: application/json
+
+{ 
+    "name": "loli1548", 
+    "number": "3629852111"
+}

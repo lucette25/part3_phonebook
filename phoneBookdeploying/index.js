@@ -137,4 +137,3 @@ const unknownEndpoint = (request, response) => {
 app.use(unknownEndpoint)
 
 //https://peaceful-everglades-70618.herokuapp.com/api/persons
-//mongodb+srv://Momo:<password>@cluster0.iewk6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority

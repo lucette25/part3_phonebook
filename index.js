@@ -13,7 +13,8 @@ app.use(express.static('build'))
 
 
 morgan.token('postData', (request) => {
-  if (request.method === 'POST') return  JSON.stringify(request.body);
+  //if (request.method === 'POST')
+   return  JSON.stringify(request.body);
 });
 app.use(
   morgan(
@@ -92,7 +93,73 @@ app.get('/api/persons', (request, response,next) => {
 
 
 
+  
+
+  app.get('/', (req, res) => {
+    res.send('<h1>Hello World!</h1>')
+  })
+
   app.post('/api/persons', (request, response) => {
+    const body = request.body
+    if (body.content === "undefined") {
+      return response.status(400).json({ error: 'content missing' })
+    }
+    const person = new Person( {
+      name: body.name, 
+      number: body.number,
+    })
+
+   person.save().then(savedPerson => {
+    response.json(savedPerson)
+  })
+})
+
+
+app.put('/api/persons/:id', (request, response, next) => {
+  const body = request.body
+
+  const person = new Person( {
+    name: body.name, 
+    number: body.number
+  })
+
+  Person.findByIdAndUpdate(request.params.id, person, { new: true })
+    .then(updatedPerson => {
+      response.json(updatedPerson)
+    })
+    .catch(error => next(error))
+})
+   
+
+  //npm run dev
+const PORT = process.env.PORT 
+app.listen(PORT)
+console.log(`Server running on port ${PORT}`)
+
+
+// handler of requests with unknown endpoint
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+
+app.use(unknownEndpoint)
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  } 
+  next(error)
+}
+
+// this has to be the last loaded middleware.
+app.use(errorHandler)
+
+
+
+
+/*app.post('/api/persons', (request, response) => {
     const body = request.body
     const existName = (element) => element.name===body.name;
     const existNumber = (element) => element.number===body.number;
@@ -120,41 +187,10 @@ app.get('/api/persons', (request, response,next) => {
         number: body.number
     })
 
-     person.save().then(savedNote => {
-      response.json(savedNote)
+     person.save().then(savedPerson => {
+      response.json(savedPerson)
     })
-  })
-
-
-   
-
-  //npm run dev
-const PORT = process.env.PORT || 3001
-app.listen(PORT)
-console.log(`Server running on port ${PORT}`)
-
-
-// handler of requests with unknown endpoint
-
-const unknownEndpoint = (request, response) => {
-  response.status(404).send({ error: 'unknown endpoint' })
-}
-
-app.use(unknownEndpoint)
-const errorHandler = (error, request, response, next) => {
-  console.error(error.message)
-
-  if (error.name === 'CastError') {
-    return response.status(400).send({ error: 'malformatted id' })
-  } 
-  next(error)
-}
-
-// this has to be the last loaded middleware.
-app.use(errorHandler)
-
-
-
+  })*/
 
 //https://peaceful-everglades-70618.herokuapp.com/api/persons
 //mongodb+srv://Momo:<password>@cluster0.iewk6.mongodb.net/myFirstDatabase?retryWrites=true&w=majority

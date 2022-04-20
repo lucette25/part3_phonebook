@@ -50,6 +50,14 @@ const Form = ({handleNameChange,handleNumberChange,newName,newNumber,persons,set
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson))
       })
+      .catch(error => {
+        setErrorMessage(` Person validation failed: name: Path name (${newName})
+         is shorter than the minimum allowed length (3). ` )
+        setClassName('error')
+        setTimeout(() => {
+          setErrorMessage('')
+        }, 4000)
+      })
 
       //Setting sucess nottification attribut
       setErrorMessage(` ${newName} is added` )

@@ -48,6 +48,10 @@ let persons=[
     }
 ]
 
+app.get('/', (req, res) => {
+  res.send('<h1>Hello World!</h1>')
+})
+
 app.get('/api/persons', (request, response,next) => {
     Person.find({}).then(persons => {
     response.json(persons)
@@ -95,14 +99,12 @@ app.get('/api/persons', (request, response,next) => {
 
   
 
-  app.get('/', (req, res) => {
-    res.send('<h1>Hello World!</h1>')
-  })
+ 
 
-  app.post('/api/persons', (request, response) => {
+  app.post('/api/persons', (request, response,next) => {
     const body = request.body
-    if (body.content === "undefined") {
-      return response.status(400).json({ error: 'content missing' })
+    if (body.name === "undefined") {
+      return response.status(400).json({ error: 'name missing' })
     }
     const person = new Person( {
       name: body.name, 
@@ -112,6 +114,8 @@ app.get('/api/persons', (request, response,next) => {
    person.save().then(savedPerson => {
     response.json(savedPerson)
   })
+  .catch(error => next(error))
+
 })
 
 
@@ -123,7 +127,10 @@ app.put('/api/persons/:id', (request, response, next) => {
     number: body.number
   }
 
-  Person.findByIdAndUpdate(request.params.id, person, { new: true })
+  Person.findByIdAndUpdate(
+    request.params.id,
+     person, 
+     { new: true, runValidators: true, context: 'query' })
     .then(updatedPerson => {
       response.json(updatedPerson)
     })
@@ -145,17 +152,19 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
-  } 
+  }else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
+  }
   next(error)
 }
 
 // this has to be the last loaded middleware.
-app.use(errorHandler)
-  //npm run dev
+app.use(errorHandler) 
 const PORT = process.env.PORT 
 app.listen(PORT)
 console.log(`Server running on port ${PORT}`)
 
+ //npm run dev
 
 
 

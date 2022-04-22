@@ -18,7 +18,8 @@ const Form = ({handleNameChange,handleNumberChange,newName,newNumber,persons,set
           setPersons(persons.map(p => p.id !== person.id ? p : returnedPerson))
         }).catch(error => {
           //Setting error nottification attribut
-            setErrorMessage(` Information of ${newName} has already been remove` )
+            setErrorMessage(`Number:  (${newNumber})
+            is shorter than the minimum allowed length (8). ` )
             setClassName('error')
             setTimeout(() => {
               setErrorMessage('')
@@ -51,12 +52,20 @@ const Form = ({handleNameChange,handleNumberChange,newName,newNumber,persons,set
         setPersons(persons.concat(returnedPerson))
       })
       .catch(error => {
+        if(newName.length<3){
         setErrorMessage(` Person validation failed: name: Path name (${newName})
          is shorter than the minimum allowed length (3). ` )
         setClassName('error')
         setTimeout(() => {
           setErrorMessage('')
-        }, 4000)
+        }, 4000)}else{
+          setErrorMessage(` Person validation failed: number (${newNumber})
+          is shorter than the minimum allowed length (8). ` )
+         setClassName('error')
+         setTimeout(() => {
+           setErrorMessage('')
+         }, 4000)
+        }
       })
 
       //Setting sucess nottification attribut

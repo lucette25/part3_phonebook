@@ -81,23 +81,16 @@ const Form = ({handleNameChange,handleNumberChange,newName,newNumber,persons,set
      const buttonAdd= (event) => {
         event.preventDefault()
         
-        const existName = (element) => element.name===newName;
-        const existNumber = (element) => element.number===newNumber;
-
+        const existName = (element) => element.name===newName && element.number!==newNumber;
+        const existNameNumber = (element) => element.number===newNumber && element.name===newName;
         
-        if(persons.findIndex(existName)===-1){
-
-          addPerson(newName,newNumber)
-        }
-        else{
-          
-          if(persons.findIndex(existNumber)===-1){
-            updatePerson(newName,newNumber)
-          }else{
+        if(persons.findIndex(existNameNumber)!==-1){
             window.alert(`${newName} ${newNumber} is already added to phonebook`);
+          }else if (persons.findIndex(existName)!==-1) {
+            updatePerson(newName,newNumber)
+          } else {
+            addPerson(newName,newNumber)
           }
-        }
-        
     }
 
     return (

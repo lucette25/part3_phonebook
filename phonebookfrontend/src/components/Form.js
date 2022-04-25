@@ -50,6 +50,13 @@ const Form = ({handleNameChange,handleNumberChange,newName,newNumber,persons,set
       .create(nameObject)
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson))
+        //Setting sucess nottification attribut
+        setErrorMessage(` ${newName} is added` )
+        setClassName('sucess')
+        setTimeout(() => {
+          setErrorMessage('')
+        }, 3000)
+
       })
       .catch(error => {
         if(newName.length<3){
@@ -59,7 +66,7 @@ const Form = ({handleNameChange,handleNumberChange,newName,newNumber,persons,set
         setClassName('error')
         setTimeout(() => {
           setErrorMessage('')
-        }, 5000)}else{
+        }, 5000)}else {
           setErrorMessage(` Person validation failed: number (${newNumber})
           is shorter or has not the good format :  the minimum allowed length (8). ` )
          setClassName('error')
@@ -69,12 +76,7 @@ const Form = ({handleNameChange,handleNumberChange,newName,newNumber,persons,set
         }
       })
 
-      //Setting sucess nottification attribut
-      setErrorMessage(` ${newName} is added` )
-      setClassName('sucess')
-      setTimeout(() => {
-        setErrorMessage('')
-      }, 3000)
+      
     }
     
 

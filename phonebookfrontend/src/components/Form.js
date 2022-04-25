@@ -19,11 +19,11 @@ const Form = ({handleNameChange,handleNumberChange,newName,newNumber,persons,set
         }).catch(error => {
           //Setting error nottification attribut
             setErrorMessage(`Number:  (${newNumber})
-            is shorter than the minimum allowed length (8). ` )
+            is shorter or has not the good format : the minimum allowed length (8). ` )
             setClassName('error')
             setTimeout(() => {
               setErrorMessage('')
-            }, 3000)
+            }, 5000)
         })
 
 
@@ -53,18 +53,19 @@ const Form = ({handleNameChange,handleNumberChange,newName,newNumber,persons,set
       })
       .catch(error => {
         if(newName.length<3){
+          
         setErrorMessage(` Person validation failed: name: Path name (${newName})
          is shorter than the minimum allowed length (3). ` )
         setClassName('error')
         setTimeout(() => {
           setErrorMessage('')
-        }, 4000)}else{
+        }, 5000)}else{
           setErrorMessage(` Person validation failed: number (${newNumber})
-          is shorter than the minimum allowed length (8). ` )
+          is shorter or has not the good format :  the minimum allowed length (8). ` )
          setClassName('error')
          setTimeout(() => {
            setErrorMessage('')
-         }, 4000)
+         }, 5000)
         }
       })
 
